@@ -1,3 +1,6 @@
+sudo nano /etc/ssh/sshd_config
+Port 2000
+
 sudo nano /etc/nginx/sites-available/default
 
 server {
