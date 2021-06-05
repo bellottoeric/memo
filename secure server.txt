@@ -1,3 +1,5 @@
+# 1. CHANGE SSH PORT
+
 sudo nano /etc/ssh/sshd_config
 Port 2000
 sudo systemctl restart ssh
@@ -8,8 +10,21 @@ sudo ufw allow 2000/tcp
 sudo ufw allow 80/tcp
 sudo ufw allow 443/tcp
 
+sudo ufw enable
+
 sudo systemctl restart nginx
 sudo systemctl restart sshd
+
+
+## Save password for connect with passphrase
+ssh-copy-id -p 2000 USER@IP
+
+## Connect
+ssh -p '2000' 'USER@IP'
+
+
+
+# 2. Add fail2ban
 
 sudo nano /etc/fail2ban/jail.d/defaults-debian.conf
 
@@ -21,25 +36,15 @@ banaction = %(banaction_allports)s
 bantime  = 1w
 findtime = 1d
 
-sudo certbot --nginx -d my.domain.com
 
 
+# 3. Generate HTTPS
 
+sudo certbot --nginx -d domain.com
+sudo certbot --nginx -d api.domain.com
 
 sudo nano /etc/nginx/sites-available/default
 
-server {
-    listen 80 default_server;
-    server_name domain domain.com www.domain.com;
-    location / {
-        proxy_pass http://127.0.0.1:3000;
-    }
-}
-server {
-    listen 80;
-    server_name dev.domain dev.domain.com www.dev.domain.com;
-    location / {
-        proxy_pass http://127.0.0.1:3001;
-    }
-}
+https://github.com/bellottoeric/memo/blob/main/nginxConfig
+
 
