@@ -4,23 +4,25 @@ sudo nano /etc/ssh/sshd_config
 Port 2000
 sudo systemctl restart ssh
 
-sudo apt-get install certbot python3-certbot-nginx ufw fail2ban -y
+sudo apt-get install certbot python3-certbot-nginx ufw git fail2ban -y
 
+sudo ufw disable && echo "y" | sudo ufw enable
+sudo ufw default deny outgoing
+sudo ufw default deny incoming
 sudo ufw allow 2000/tcp
 sudo ufw allow 80/tcp
 sudo ufw allow 443/tcp
+sudo ufw disable && echo "y" | sudo ufw enable
 
-sudo ufw enable
-
-sudo systemctl restart nginx
-sudo systemctl restart sshd
-
+sudo systemctl restart nginx && sudo systemctl restart sshd
+sudo rm default && sudo nano default && sudo systemctl restart nginx && sudo systemctl restart sshd
 
 ## Save password for connect with passphrase
-ssh-copy-id -p 2000 USER@IP
+ssh-copy-id -p 2000 root@192.168.1.1
 
-## Connect
-ssh -p '2000' 'USER@IP'
+## Connect and add in alias
+source ~/.bashrc
+alias sx="ssh -p '2000' 'root@192.168.1.1'"
 
 
 
